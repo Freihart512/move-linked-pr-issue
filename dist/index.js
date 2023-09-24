@@ -7,8 +7,6 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 //const {graphql} = require("@octokit/graphql");
 const { Octokit } = __nccwpck_require__(7467);
 const  fetch = __nccwpck_require__(4429);
-console.log(fetch)
-
 class graphqlApi {
     constructor(token) {
         this.octokit = new Octokit({ auth: token, request: {  fetch } });
@@ -49554,6 +49552,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(2186);
 const graphqlApi = __nccwpck_require__(5733);
+const  fetch = __nccwpck_require__(4429);
 const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = __nccwpck_require__(6525);
 
 
@@ -49567,8 +49566,10 @@ async function run() {
     const githubToken = core.getInput('github_token');
     const personalToken = core.getInput('personal_token');
 
+    core.info(`Este es fetch`, fetch);
     const graphqlInstance = new graphqlApi(personalToken);
-
+    
+    
     core.info(`getting project info ...`);
     const getProjectQuery = orgName ? getProjectInfoByNameWithOrg(projectName, userName) : getProjectInfoByNameWithUser(projectName, userName) 
     core.info(getProjectQuery);
