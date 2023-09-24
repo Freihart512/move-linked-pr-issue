@@ -1,9 +1,10 @@
 //const {graphql} = require("@octokit/graphql");
 const { Octokit } = require("octokit");
+const  fetch = require("node-fetch");
 
 class graphqlApi {
     constructor(token) {
-        this.octokit = new Octokit({ auth: token });
+        this.octokit = new Octokit({ auth: token, request: {  fetch } });
     }
 
     query(q) {
