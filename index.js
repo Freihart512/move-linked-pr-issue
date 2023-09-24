@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const graphqlApi = require('./graphql');
-const  fetch = require("node-fetch");
 const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = require('./graphql/queries');
 
 
@@ -14,7 +13,6 @@ async function run() {
     const githubToken = core.getInput('github_token');
     const personalToken = core.getInput('personal_token');
 
-    core.info(`Este es fetch`, fetch);
     const graphqlInstance = new graphqlApi(personalToken);
     
     
