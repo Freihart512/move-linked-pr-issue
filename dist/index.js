@@ -7,6 +7,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 //const {graphql} = require("@octokit/graphql");
 const { Octokit } = __nccwpck_require__(7467);
 const  fetch = __nccwpck_require__(4429);
+console.log(fetch)
 
 class graphqlApi {
     constructor(token) {

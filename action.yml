@@ -16,6 +16,10 @@ inputs:
     description: user Name.
     required: false
     default: ''
+  personal_token:
+    description: personal_token.
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
