@@ -1,0 +1,17 @@
+name: Tests my action
+on:
+  issues:
+        types: [assigned]
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: Freihart512/move-linked-pr-issue@v0.0.26
+        with: 
+          project_name: Scrapper Infracciones
+          user_name: Freihart512
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{secrets.PERSONAL_TOKEN}}

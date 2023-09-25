@@ -51636,6 +51636,8 @@ async function run() {
     core.info(JSON.stringify(github.context.eventName));
     core.info(JSON.stringify(github.context.issue));
 
+    core.info(JSON.stringify(github.context.payload));
+
     return;
 
 
