@@ -9,7 +9,7 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: Freihart512/move-linked-pr-issue@v0.0.26
+      - uses: Freihart512/move-linked-pr-issue@v0.0.25
         with: 
           project_name: Scrapper Infracciones
           user_name: Freihart512
