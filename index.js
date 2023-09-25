@@ -9,8 +9,10 @@ const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = require('.
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const payload = JSON.stringify(github.event)
-    core.info(payload);
+    //const payload = JSON.stringify()
+    core.info(github.context.name);
+    core.info(JSON.stringify(github.context.eventName));
+    core.info(JSON.stringify(github.context.issue));
 
     return;
 
