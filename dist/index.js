@@ -51631,7 +51631,7 @@ const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = __nccwpck_
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    const payload = JSON.stringify(github.context.payload)
     core.info(payload);
 
     return;
