@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const payload = JSON.stringify(github.context.payload, undefined, 2)
+
 const graphqlApi = require('./graphql');
 var get = require('lodash.get');
 const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = require('./graphql/queries');
@@ -9,6 +9,13 @@ const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = require('.
 // most @actions toolkit packages have async methods
 async function run() {
   try {
+    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    core.info(payload);
+
+    return;
+
+
+
     const projectName = core.getInput('project_name');
     const userName = core.getInput('user_name');
     const orgName = core.getInput('org_name');

@@ -51622,7 +51622,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-const payload = JSON.stringify(github.context.payload, undefined, 2)
+
 const graphqlApi = __nccwpck_require__(5733);
 var get = __nccwpck_require__(9197);
 const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = __nccwpck_require__(6525);
@@ -51631,6 +51631,13 @@ const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = __nccwpck_
 // most @actions toolkit packages have async methods
 async function run() {
   try {
+    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    core.info(payload);
+
+    return;
+
+
+
     const projectName = core.getInput('project_name');
     const userName = core.getInput('user_name');
     const orgName = core.getInput('org_name');
