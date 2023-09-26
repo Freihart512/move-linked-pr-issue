@@ -40,12 +40,12 @@ async function run() {
     title: get(response, 'user.repository.issue1.title',''),
     projectItemId: get(response, 'user.repository.issue1.projectItems.nodes[0].id','')
   }
-  const targetCol = project.cols.filter(col => col.name === targetColName);
+  const targetCol = project.cols.find(col => col.name === targetColName);
 
 
   core.info(`Project ${JSON.stringify(project)}`);
   core.info(`issue ${JSON.stringify(issue)}`);
-  core.info(`issue ${targetCol}`);
+  core.info(`issue ${JSON.stringify(targetCol)}`);
 
   try {
     const mutationString =  moveItemToStatus(project.id, issue.projectItemId, project.statusFieldId, targetCol.id);
