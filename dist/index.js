@@ -51699,12 +51699,13 @@ async function run() {
   try {
     core.info(`getting Issuye info ...`);
     const query = getInfoFromIssue(userName, repoName, entityNumber, projectNumber);
-    core.info(`Query ...`, query);
+    core.info(`Query ... ${query}`,);
     response = await graphqlInstance.query(query);
   } catch (error) {
     core.error(`Fails getting a project with those values: ${userName}, ${repoName}, ${entityNumber}, ${projectNumber}`);
     core.error(`Error ${error} ...`);
     core.setFailed(error.message);
+    return;
   }
   const projectResponsePath = 'user.repository.issue1.projectV2';
   const project = {
