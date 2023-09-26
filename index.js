@@ -21,6 +21,7 @@ async function run() {
     const query = getInfoFromIssue(userName, repoName, entityNumber, projectNumber);
     core.info(`Query ... ${query}`,);
     response = await graphqlInstance.query(query);
+    core.info(`Query ... ${JSON.stringify(response)}`);
   } catch (error) {
     core.error(`Fails getting a project with those values: ${userName}, ${repoName}, ${entityNumber}, ${projectNumber}`);
     core.error(`Error ${error} ...`);
@@ -42,8 +43,8 @@ async function run() {
   const targetCol = project.cols.filter(col => col.name === targetColName);
 
 
-  core.info(`Project ${project}`);
-  core.info(`issue ${issue}`);
+  core.info(`Project ${JSON.stringify(project)}`);
+  core.info(`issue ${JSON.stringify(issue)}`);
   core.info(`issue ${targetCol}`);
 
   try {
