@@ -4,13 +4,12 @@ inputs:
   project_number:  # id of input
     description: 'number of the target project'
     required: true
+  target_col:
+    description: 'name od the target status (Colum)'
+    required: true
   github_token:
     description: GitHub token.
     required: true
-  org_name:
-    description: Org name.
-    required: false
-    default: ''
   user_name:
     description: user Name.
     required: false

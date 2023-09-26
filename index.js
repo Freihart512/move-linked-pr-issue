@@ -47,7 +47,9 @@ async function run() {
   core.info(`issue ${targetCol}`);
 
   try {
-    await moveItemToStatus(project.id, issue.projectItemId, project.statusFieldId, targetCol.id);
+    const mutationString =  moveItemToStatus(project.id, issue.projectItemId, project.statusFieldId, targetCol.id);
+    core.info(`Query ... ${mutationString}`,);
+    response = await graphqlInstance.query(mutationString);
 
     core.info(`the Issue: ${issue.title} now is in ${targetColName}`);
     
