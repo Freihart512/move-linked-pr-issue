@@ -1,10 +1,9 @@
 name: 'moveCards'
 description: 'move a card in teh project toa specific column'
 inputs:
-  project_name:  # id of input
-    description: 'name of the target project'
+  project_number:  # id of input
+    description: 'number of the target project'
     required: true
-    default: ''
   github_token:
     description: GitHub token.
     required: true
