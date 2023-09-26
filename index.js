@@ -36,9 +36,9 @@ async function run() {
     cols: get(response, `${projectResponsePath}.field.options`, [])
   }
   const issue = {
-    id: get(response, 'user.repository.issue1}.id',''),
-    title: get(response, 'user.repository.issue1}.title',''),
-    projectItemId: get(response, 'user.repository.issue1.projectItems.nodes[0].id}.title','')
+    id: get(response, 'user.repository.issue1.id',''),
+    title: get(response, 'user.repository.issue1.title',''),
+    projectItemId: get(response, 'user.repository.issue1.projectItems.nodes[0].id.title','')
   }
   const targetCol = project.cols.filter(col => col.name === targetColName);
 
