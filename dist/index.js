@@ -21,55 +21,113 @@ module.exports = graphqlApi;
 
 /***/ }),
 
+/***/ 6334:
+/***/ ((module) => {
+
+/**
+ * moveItemToStatus: 
+ * is a function to generate the mutation string to change 
+ * the status of the project item.
+ *
+ * @param {string} projectId - id of the project: PVT_xxxxxx
+ * @param {string} projectItemId - id of the "card" that want to move: (PVT_element_prefix)_xxxxx
+ * @param {string} singleSelectFieldId - id of the field that contains the status in the project: PVTSSF_xxxxxx
+ * @param {string} singleSelectOptionId - id of the new status (colum in the board): 47fc9ee4
+ * @return {string} string of mutation to change the status of teh item
+ *
+ * @example
+ * moveItemToStatus(PVT_xxxxxx, (PVT_element_prefix)_xxxxx, PVTSSF_xxxxxx, "47fc9ee4")
+ *     
+ */
+function moveItemToStatus (projectId, projectItemId, singleSelectFieldId, singleSelectOptionId) {
+    return `
+    mutation {
+        updateProjectV2ItemFieldValue(
+          input: {
+            projectId: "${projectId}", 
+            itemId: "${projectItemId}", 
+            fieldId: "${singleSelectFieldId}", 
+            value: {singleSelectOptionId: "${singleSelectOptionId}"}}
+        ) {
+          projectV2Item {
+            id
+          }
+        }
+      }
+    `
+}
+
+module.exports = {
+    moveItemToStatus
+}
+
+/***/ }),
+
 /***/ 6525:
 /***/ ((module) => {
 
-function getProjectInfoByNameWithUser(projectName, user){
-    const q = `
-    {
-      user(login: "${user}") {
-        ${ProjectByName(projectName)}
-      }
-    }`
-    return q
-}
-
-function getProjectInfoByNameWithOrg(projectName, orgName){
-  const q = `
-  {
-    organization(login: "${orgName}") {
-      ${ProjectByName(projectName)}
-    }
-  }`
-  return q
-}
-
-function ProjectByName (projectName){
+/**
+ * getInfoFromIssue: 
+ * is a function to generate the query string to get the info related with the issue
+ * 
+ *
+ * @param {string} userName - user to login
+ * @param {string} repoName
+ * @param {string} issueNumber - number of the issue that want to move
+ * @param {string} projectNumber - number of the prpject that want to affect
+ * @return {string} a string of queries that returns us issue info project info, cols info, and  project item info related to the issue
+ *
+ * @example
+ * getInfoFromIssue(githubUser, myRepo, 3, 1)
+ *     
+ */
+function getInfoFromIssue (userName, repoName, issueNumber, projectNumber) {
   return `
-    projectsV2(first:1 query:"${projectName}") {
-      edges {
-        node {
-          id
+  {
+    user(login: "${userName}") {
+      repository(name: "${repoName}") {
+        issue1: issue(number: ${issueNumber}) {
           title
-          field(name:"Status"){
-            __typename
-             ... on ProjectV2SingleSelectField{
-               id
-              options{
+          createdAt
+          id
+          projectV2(number: ${projectNumber}) {
+            id
+            title
+            field(name: "Status") {
+              __typename
+              ... on ProjectV2SingleSelectField {
                 id
-                name
+                options {
+                  id
+                  name
+                }
+              }
+            }
+          }
+          projectItems(first:1){
+            __typename
+            nodes {
+              type
+              id
+              content {
+                __typename
+                ...on Issue{
+                  number
+                  id
+                  title
+                }
               }
             }
           }
         }
       }
-    }`
+    }
+  }
+  `
 }
 
 module.exports = {
-  getProjectInfoByNameWithUser,
-  getProjectInfoByNameWithOrg,
-
+  getInfoFromIssue
 }
 
 /***/ }),
@@ -51625,66 +51683,56 @@ const github = __nccwpck_require__(5438);
 
 const graphqlApi = __nccwpck_require__(5733);
 var get = __nccwpck_require__(9197);
-const { getProjectInfoByNameWithUser, getProjectInfoByNameWithOrg } = __nccwpck_require__(6525);
+const { getInfoFromIssue } = __nccwpck_require__(6525);
+const { moveItemToStatus } = __nccwpck_require__(6334);
 
-
-// most @actions toolkit packages have async methods
 async function run() {
+  const projectNumber = core.getInput('project_number');
+  const userName = core.getInput('user_name');
+  const targetColName = core.getInput('target_col');
+  const githubToken = core.getInput('github_token');
+  const personalToken = core.getInput('personal_token');
+  const {repo:repoName, number:entityNumber} =  github.context.issue;
+  const token = personalToken || githubToken;
+  const graphqlInstance = new graphqlApi(token);
+  let response = null;
   try {
-    //const payload = JSON.stringify()
-    core.info(github.context.name);
-    core.info(JSON.stringify(github.context.eventName));
-    core.info(JSON.stringify(github.context.issue));
-
-    core.info(JSON.stringify(github.context.payload.issue));
-
-    return;
-
-
-
-    const projectName = core.getInput('project_name');
-    const userName = core.getInput('user_name');
-    const orgName = core.getInput('org_name');
-    const targetColName = core.getInput('targetCol');
-    const githubToken = core.getInput('github_token');
-    const personalToken = core.getInput('personal_token');
-
-    const token = personalToken || githubToken;
-
-    const graphqlInstance = new graphqlApi(token);
-    
-    
-    core.info(`getting project info ...`);
-    const getProjectQuery = orgName ? getProjectInfoByNameWithOrg(projectName, userName) : getProjectInfoByNameWithUser(projectName, userName) 
-    core.info(getProjectQuery);
-    const reponse = await graphqlInstance.query(`
-    mutation {
-      updateProjectV2ItemFieldValue(
-        input: {projectId: "PVT_kwHOANGp0s4ATT8y", itemId: "I_kwDOJ4bThM5tkZGt", fieldId: "PVTSSF_lAHOANGp0s4ATT8yzgMVbsY", value: {singleSelectOptionId: "47fc9ee4"}}
-      ) {
-        projectV2Item {
-          id
-        }
-      }
-    }`)
-    //{"user":{"projectsV2":{"edges":[{"node":{"id":"PVT_kwHOANGp0s4ATT8y","title":"Scrapper Infracciones","field":{"__typename":"ProjectV2SingleSelectField","id":"PVTSSF_lAHOANGp0s4ATT8yzgMVbsY","options":[{"id":"c1a353c4","name":"Backlog"},{"id":"f75ad846","name":"Todo"},{"id":"47fc9ee4","name":"In Progress"},{"id":"6d23dd3c","name":"In code Review"},{"id":"98236657","name":"Done"}]}}}]}}}
-    // const p =  get(reponse, 'user.projectsV2,edges[0].node');
-    // const project = {
-    //   id: p.id,
-    //   title: p.title,
-    //   colsId: p.field,
-    //   colsOptions: p.field.options
-    // }
-
-    // const targetCol = project.colsOptions.filter(col => col.name === targetColName);
-
-
-
-    core.info(`Project ${JSON.stringify(reponse)}`);
-    core.debug(reponse);
-    core.debug(JSON.stringify(reponse));
+    core.info(`getting Issuye info ...`);
+    const query = getInfoFromIssue(userName, repoName, entityNumber, projectNumber);
+    core.info(`Query ...`, query);
+    response = await graphqlInstance.query(query);
   } catch (error) {
-    core.info(`error ${error} ...`);
+    core.error(`Fails getting a project with those values: ${userName}, ${repoName}, ${entityNumber}, ${projectNumber}`);
+    core.error(`Error ${error} ...`);
+    core.setFailed(error.message);
+  }
+  const projectResponsePath = 'user.repository.issue1.projectV2';
+  const project = {
+    name: get(response, `${projectResponsePath}.title`,''),
+    id: get(response, `${projectResponsePath}.id`, ''),
+    statusFieldId: get(response, `${projectResponsePath}.field.id`, ''),
+    cols: get(response, `${projectResponsePath}.field.options`, [])
+  }
+  const issue = {
+    id: get(response, 'user.repository.issue1}.id',''),
+    title: get(response, 'user.repository.issue1}.title',''),
+    projectItemId: get(response, 'user.repository.issue1.projectItems.nodes[0].id}.title','')
+  }
+  const targetCol = project.cols.filter(col => col.name === targetColName);
+
+
+  core.info(`Project ${project}`);
+  core.info(`issue ${issue}`);
+  core.info(`issue ${targetCol}`);
+
+  try {
+    await moveItemToStatus(project.id, issue.projectItemId, project.statusFieldId, targetCol.id);
+
+    core.info(`the Issue: ${issue.title} now is in ${targetColName}`);
+    
+  } catch (error) {
+    core.error(`Failed changing the status with those values: ${project.id}, ${issue.projectItemId}, ${project.statusFieldId}, ${targetCol.id}`);
+    core.error(`Error ${error} ...`);
     core.setFailed(error.message);
   }
 }
