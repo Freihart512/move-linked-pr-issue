@@ -1,17 +1,13 @@
 /**
- * getInfoFromIssue: 
+ * getInfoFromIssue:
  * is a function to generate the query string to get the info related with the issue
- * 
- *
  * @param {string} userName - user to login
- * @param {string} repoName
+ * @param {string} repoName - name of the repository
  * @param {string} issueNumber - number of the issue that want to move
  * @param {string} projectNumber - number of the prpject that want to affect
- * @return {string} a string of queries that returns us issue info project info, cols info, and  project item info related to the issue
- *
+ * @returns {string} a string of queries that returns us issue info project info, cols info, and  project item info related to the issue
  * @example
  * getInfoFromIssue(githubUser, myRepo, 3, 1)
- *     
  */
 function getInfoFromIssue (userName, repoName, issueNumber, projectNumber) {
   return `
@@ -55,9 +51,9 @@ function getInfoFromIssue (userName, repoName, issueNumber, projectNumber) {
       }
     }
   }
-  `
+  `;
 }
 
 module.exports = {
   getInfoFromIssue
-}
+};

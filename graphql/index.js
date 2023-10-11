@@ -1,14 +1,14 @@
-//const {graphql} = require("@octokit/graphql");
-const { Octokit } = require("octokit");
-const  fetch = require("node-fetch");
-class graphqlApi {
-    constructor(token) {
-        this.octokit = new Octokit({ auth: token, request: {  fetch } });
-    }
+const { Octokit } = require('octokit');
+const fetch = require('node-fetch');
+class GraphqlApi {
+  constructor (token) {
+    this.octokit = new Octokit({ auth: token, request: { fetch } });
+  }
 
-    query(q) {
-        return  this.octokit.graphql(q);
-    }
+  query (q) {
+    console.log("HOLAAAA")
+    return this.octokit.graphql(q);
+  }
 }
 
-module.exports = graphqlApi;
+module.exports = GraphqlApi;
